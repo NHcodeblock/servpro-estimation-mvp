@@ -1,47 +1,63 @@
-<form name="estimate-submission" method="POST" netlify>
-  <input type="hidden" name="form-name" value="estimate-submission" />
-  
-  <div className="form-card">
-    <label htmlFor="name">Full Name</label>
-    <input
-      id="name"
-      type="text"
-      name="name"
-      placeholder="e.g. John Doe"
-      value={name}
-      onChange={(e) => setName(e.target.value)}
-      required
-    />
-  </div>
+import React, { useState } from 'react'
 
-  <div className="form-card">
-    <label htmlFor="email">Email Address</label>
-    <input
-      id="email"
-      type="email"
-      name="email"
-      placeholder="e.g. john@example.com"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      required
-    />
-  </div>
+export default function Step5Contact({ data, onNext, onBack }) {
+  const [name, setName] = useState('Numaan,H\'s Team')
+  const [email, setEmail] = useState('numaanhussain8688@gmail.com')
+  const [phone, setPhone] = useState('')
 
-  <div className="form-card">
-    <label htmlFor="phone">Phone Number</label>
-    <input
-      id="phone"
-      type="tel"
-      name="phone"
-      placeholder="e.g. (708) 240-4873"
-      value={phone}
-      onChange={(e) => setPhone(e.target.value)}
-    />
-  </div>
+  return (
+    <div className="step-container">
+      <div className="step-header">
+        <h1>Send your estimate</h1>
+        <p>How would you like to receive the estimate?</p>
+      </div>
 
-  <input type="hidden" name="estimate" value={JSON.stringify(data)} />
+      <form name="estimate-submission" method="POST" netlify>
+        <input type="hidden" name="form-name" value="estimate-submission" />
+        
+        <div className="form-card">
+          <label>Full Name</label>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
 
-  <button type="submit" className="btn-primary">
-    📧 Send Estimate
-  </button>
-</form>
+        <div className="form-card">
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-card">
+          <label>Phone Number</label>
+          <input
+            type="tel"
+            name="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+
+        <input type="hidden" name="estimate" value={JSON.stringify(data)} />
+
+        <div className="step-actions">
+          <button type="button" className="btn-secondary" onClick={onBack}>
+            Back
+          </button>
+          <button type="submit" className="btn-primary">
+            📧 Send Estimate
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
