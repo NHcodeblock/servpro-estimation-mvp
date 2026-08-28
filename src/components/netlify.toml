@@ -3,5 +3,6 @@
   publish = "public"
   functions = "netlify/functions"
 
-[build.environment]
-  GATSBY_PRECOMPILE_DEVELOP_FUNCTIONS = "true"
+[[plugins]]
+  package = "@netlify/plugin-gatsby"
+  
