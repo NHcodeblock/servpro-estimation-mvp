@@ -4,61 +4,29 @@ exports.handler = async (event) => {
   }
 
   try {
+    const apiKey = process.env.SENDGRID_API_KEY
+    console.log('API Key present:', !!apiKey)
+    console.log('API Key length:', apiKey ? apiKey.length : 0)
+
     const { name, email, phone, estimate, sendEmail, sendSMS } = JSON.parse(event.body)
 
-    const estimateText = `
-SERVPRO Estimate
-
-Customer: ${name}
-Damage Type: ${estimate.damageType}
-Square Footage: ${estimate.squareFeet.toLocaleString()} sq ft
-Complexity: ${estimate.complexity}
-
-COST BREAKDOWN:
-Base Labor (@ $65/hr): $${estimate.labor.toLocaleString()}
-Materials & Supplies: $${estimate.materials.toLocaleString()}
-${estimate.additionalServices > 0 ? `Additional Services: $${estimate.additionalServices.toLocaleString()}` : ''}
-Overhead & Equipment: $${estimate.overhead.toLocaleString()}
-
-Subtotal: $${estimate.subtotal.toLocaleString()}
-Tax (8%): $${estimate.tax.toLocaleString()}
-
-TOTAL ESTIMATE: $${estimate.total.toLocaleString()}
-
-This is a preliminary estimate. Final pricing may vary based on site inspection.
-SERVPRO is independently owned and operated.
-
-Phone: (708) 240-4873
-Email: servpro@example.com
-    `
-
     if (sendEmail && email) {
-      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
+      console.log('Attempting to send email to:', email)
+      console.log('Using API key:', apiKey ? 'YES' : 'NO')
+      
+      // Just return success for now
+      return {
+        statusCode: 200,
         body: JSON.stringify({
-          personalizations: [{ to: [{ email }] }],
-          from: { email: 'numaanhussain8688@gmail.com' },
-          subject: `Your SERVPRO Estimate - ${estimate.damageType}`,
-          content: [{ type: 'text/plain', value: estimateText }]
+          success: true,
+          message: 'Test successful - function works!'
         })
-      })
-
-      if (!response.ok) {
-        throw new Error(`SendGrid API error: ${response.status}`)
       }
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        success: true,
-        message: 'Estimate sent successfully!',
-        details: { email: sendEmail, sms: sendSMS }
-      })
+      body: JSON.stringify({ success: true })
     }
   } catch (error) {
     console.error('Error:', error)
