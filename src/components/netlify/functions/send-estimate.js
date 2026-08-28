@@ -39,7 +39,7 @@ Email: servpro@example.com
       
       const msg = {
         to: email,
-        from: 'noreply@servpro-estimation.com',
+        from: 'numaanhussain8688@gmail.com',
         subject: `Your SERVPRO Estimate - ${estimate.damageType}`,
         text: estimateText,
       }
