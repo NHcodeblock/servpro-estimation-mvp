@@ -1,5 +1,3 @@
-const sgMail = require('@sendgrid/mail')
-
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' }
@@ -35,16 +33,23 @@ Email: servpro@example.com
     `
 
     if (sendEmail && email) {
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-      
-      const msg = {
-        to: email,
-        from: 'numaanhussain8688@gmail.com',
-        subject: `Your SERVPRO Estimate - ${estimate.damageType}`,
-        text: estimateText,
-      }
+      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          personalizations: [{ to: [{ email }] }],
+          from: { email: 'numaanhussain8688@gmail.com' },
+          subject: `Your SERVPRO Estimate - ${estimate.damageType}`,
+          content: [{ type: 'text/plain', value: estimateText }]
+        })
+      })
 
-      await sgMail.send(msg)
+      if (!response.ok) {
+        throw new Error(`SendGrid API error: ${response.status}`)
+      }
     }
 
     return {
